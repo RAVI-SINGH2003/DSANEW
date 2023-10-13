@@ -1,0 +1,63 @@
+//tc : o(nlogn)
+//sc : o(n)
+https://www.youtube.com/watch?v=bqraplP_Kqk&ab_channel=FitCoder
+
+LNode* middleNode(LNode* head,LNode* tail) {
+    if(head==NULL) return NULL;
+    LNode * slow = head, *fast = head->next;
+        while(fast!=tail){
+        slow = slow ->next;
+        fast = fast->next;
+        if(fast!=tail)
+            fast = fast->next;
+    }
+    return slow;
+}
+TNode *convertLLToBst (LNode * head , LNode * tail){
+    if(head==tail) return NULL;
+    LNode * mid = middleNode(head,tail);
+    TNode * root = new TNode(mid->data);
+    root ->left =  convertLLToBst(head,mid);
+    root ->right =  convertLLToBst(mid->next,tail);
+    return root;
+    
+}
+TNode* sortedListToBST(LNode *head) {
+    if(head==NULL) return NULL;
+    return convertLLToBst(head, NULL);
+}
+
+tc : o(n)
+sc : o(n)
+TreeNode* sortedListToBST_helper(ListNode* &head, int n){
+    //  base case
+    if(head == NULL || n<=0){
+        return NULL;
+    }
+
+    TreeNode* leftSubtree = sortedListToBST_helper(head, n/2);
+    TreeNode* root = new TreeNode(head->val);
+    root->left = leftSubtree;
+
+    head = head->next;
+    // right part
+    root->right = sortedListToBST_helper(head, n-1-n/2);
+
+    return root;
+
+}
+
+int length_LL(ListNode* head){
+    int len = 0;
+    ListNode* curr = head;
+    while(curr){
+        len++;
+        curr = curr->next;
+    }
+    return len;
+}
+TreeNode* sortedListToBST(ListNode* head) {
+    int n = length_LL(head); // length of Linked List
+    TreeNode* ans = sortedListToBST_helper(head, n);
+    return ans;
+}

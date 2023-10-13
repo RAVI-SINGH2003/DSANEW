@@ -1,0 +1,47 @@
+TC : O(n*m)
+SC : O(n*m)
+Approach - just start multisource bfs from rotten cells(2 cells) and if any of the rotten cells has 
+a 1 cell to its left right up down just increase the time by 1
+int orangesRotting(vector<vector<int>>& grid) {
+    int m = grid.size();
+    int n = grid[0].size();
+    int time = 0;
+    vector<vector<int>> mat = grid;
+    queue<pair<int,int>> q;
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(mat[i][j]==2){
+                q.push({i,j});
+            }
+        }
+    }
+    pair<int,int> p[] = {{-1,0},{1,0},{0,-1},{0,1}};
+    while(!q.empty()){
+        int size = q.size();
+        bool flag = false;
+        for(int len = 1;len<=size; len++){
+            int row = q.front().first;
+            int col = q.front().second;
+            q.pop();
+            for(int k=0;k<4;k++){
+                int newrow = p[k].first +  row;
+                int newcol = p[k].second + col;
+                if(newrow>=0 && newrow<m && newcol>=0 && newcol<n  && mat[newrow][newcol]==1){
+                    q.push({newrow , newcol});
+                    mat[newrow][newcol] = 2;
+                    flag = true;
+                }
+            }
+            
+        }
+        if(flag) time++;
+    }
+        for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(mat[i][j]==1){
+                return -1;
+            }
+        }
+    }
+    return time;
+}

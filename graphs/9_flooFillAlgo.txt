@@ -1,0 +1,22 @@
+TC : O(NM)
+SC : O(NM)
+void dfs(auto & image , int r , int c , int oldColor , int newColor){   
+    image[r][c] = newColor;
+    pair<int,int> arr[4] = {{-1,0} , {1,0} , {0,-1} , {0,1}};
+    int n = image.size();
+    int m = image[0].size();
+    for(int i =0;i<4;i++){
+        int x = arr[i].first;
+        int y = arr[i].second;
+        if(r+x <n && r+x >=0 &&  c+y <m && c+y >=0 && image[r+x][c+y]==oldColor){
+            dfs(image ,r+x , c+y , oldColor , newColor);
+        }
+    }
+}
+vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+    int oldColor = image[sr][sc];
+    if(oldColor == newColor) return image; 
+    vector<vector<int>> ans = image;
+    dfs(ans , sr , sc ,oldColor, newColor);
+    return ans;
+}

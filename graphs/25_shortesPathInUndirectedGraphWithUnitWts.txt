@@ -1,0 +1,31 @@
+#Apprach - BFS
+ vector<int> shortestPath(vector<vector<int>>& edges, int N,int M, int src){
+        vector<int> adj[N];
+        for(auto & p : edges){
+            adj[p[0]].push_back(p[1]);
+            adj[p[1]].push_back(p[0]);
+        }
+        vector<int> dis(N,1e8);
+        dis[src] = 0;
+        queue<pair<int,int>> q;
+        q.push({src,0});
+        // int vis[N] = {0};
+        while(!q.empty()){
+            int node = q.front().first;
+            int dist = q.front().second;
+            q.pop();
+           for(int nbr : adj[node]){
+               //if dis[nbr] == 1e8 then it means node not vis
+               if(dis[nbr]==1e8){
+                   q.push({nbr,dist+1});
+                   dis[nbr] = dist+1;
+               }
+           }
+        }
+        for(auto & e : dis){
+            if(e==1e8)
+             e = -1;
+        }
+        return dis;
+        
+}

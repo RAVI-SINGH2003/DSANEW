@@ -1,0 +1,36 @@
+# CycleDetetion In Directed Graph - Using Kahn'sAlgo
+Idea : = If our Topological sort produded by Kahn's algo does not include all vertices then there is cycle
+
+Time Complexity: O(V + E).
+Auxiliary Space: O(V).
+void bfs(int node  , vector<int> & indegree , auto & ans,vector<int> * &adj){
+    queue<int> q;
+    //note that there will be atleast one element in queue as in a DAG its confirm that there is atleast one node with indegree 0
+    for(int i=0;i<indegree.size();i++){
+        if(indegree[i]==0)
+        q.push(i);
+    }
+    while(!q.empty()){
+        int v = q.front();
+        q.pop();
+        ans.push_back(v);
+        for(int nbr : adj[v]){
+            indegree[nbr]--;
+            if(indegree[nbr]==0)
+            q.push(nbr);
+            
+        }
+    }
+}
+bool isCyclic(int V, vector<int> adj[]) {
+    
+    vector<int> indegree(V);
+    vector<int> ans;
+    for(int node=0;node < V;node ++){
+        for(int nbr : adj[node]){
+            indegree[nbr]++;
+        }
+    }
+    bfs(0,indegree,ans,adj);
+    return ans.size()!=V;
+}

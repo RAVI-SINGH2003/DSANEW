@@ -1,0 +1,82 @@
+#Note - Idea used is to just check if there is a cycle 
+#Approach -1 using dfs to find if there is a cycle in directed graph
+#Approach -2 use kahn's algo to detect cycle.
+
+
+
+#Approach - 1
+bool dfs(int node , vector<int> adj[],vector<int>& vis , vector<int> & pathVis){
+    vis[node] = 1;
+    pathVis[node] = 1;
+    for(int nbr : adj[node]){
+        if(!vis[nbr]){
+            if(dfs(nbr,adj,vis,pathVis))
+                return true;
+        }
+        else if(pathVis[nbr]){
+            return true;
+        }
+    }
+    pathVis[node] = 0;
+    return false;
+}
+bool isPossible(int N,int P, vector<pair<int, int> >& prerequisites) {
+        vector<int> adj[N];
+    //converting given data in to graph
+    for(int i=0;i<prerequisites.size();i++){
+        int parent = prerequisites[i].second;
+        int child = prerequisites[i].first;
+        adj[parent].push_back(child);
+    }
+    //calculating indegree of each node
+    vector<int> vis(N);
+    vector<int> pathVis(N);
+    for(int node=0;node<N;node++){
+        if(!vis[node]){
+            if(dfs(node,adj,vis,pathVis))
+            return false;
+        }
+    }
+    return true;
+}
+
+#Approach - 2
+bool isPossible(int N,int P, vector<pair<int, int> >& prerequisites) {
+    vector<int> adj[N];
+    //converting given data in to graph
+    for(int i=0;i<prerequisites.size();i++){
+        int parent = prerequisites[i].second;
+        int child = prerequisites[i].first;
+        adj[parent].push_back(child);
+    }
+    //calculating indegree of each node
+    vector<int> indegree(N,0);
+    for(int node=0;node<N;node++){
+        for(int nbr : adj[node]) indegree[nbr]++;
+    }
+    queue<int> q;
+    //push nodes with 0 indegree in queue
+    for(int node=0;node<N;node++){
+        if(indegree[node]==0) 
+        {
+            q.push(node);
+        }
+    }
+    vector<int> ans;
+    //apply Kahns algo
+    while(!q.empty()){
+        int node = q.front();
+        ans.push_back(node);
+        q.pop();
+        for(int nbr : adj[node]){
+            indegree[nbr]--;
+            if(indegree[nbr]==0){
+                q.push(nbr);
+            }
+        }
+    }
+    //if the size of topo sort is not equal to no of vertices then it means there is a cycle in graph or deadock
+    //so all tasks can not be completed
+    if(ans.size()!=N) return false;
+    return true;
+}

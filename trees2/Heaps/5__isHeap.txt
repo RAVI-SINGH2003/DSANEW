@@ -1,0 +1,23 @@
+bool heapProp(struct Node * root,int &count){
+    if(root==NULL) return true;
+    bool left = heapProp(root->left,count);
+    bool right = heapProp(root->right,count);
+    count++;
+    if(!left || !right) return false;
+    if((root->left && (root->left->data )> (root->data ))|| (root->right && (root->right->data) > (root->data))){
+        return false;
+    }
+    return true;
+}
+bool isCompleteBinaryTree(struct Node * root,int i ,int count){
+    if(root==NULL) return true;
+    if(i >count) return false;
+    return isCompleteBinaryTree(root->left,2*i,count)  && isCompleteBinaryTree(root->right,2*i+1,count);
+    
+}
+bool isHeap(struct Node* root) {
+    int count = 0;
+    bool op1 =  heapProp(root,count);
+    bool op2 =  isCompleteBinaryTree(root,1,count);
+    return op1 && op2;
+}

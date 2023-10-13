@@ -1,0 +1,34 @@
+TC : O(klogk) + O((n*k-k)*logk) = O(n*klogk)
+SC : O(k)
+class compare{
+public :
+bool operator()(ListNode* node1 , ListNode * node2){
+    return node1->val > node2->val;
+}
+};
+
+class Solution {
+public:
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+    ListNode * ans= new ListNode(-1),*temp = ans;
+    priority_queue<ListNode * , vector<ListNode*> ,compare> heap;
+    for(int i=0;i<lists.size();i++){
+        ListNode* temp = lists[i];
+        if(temp)
+        {
+            heap.push(temp);
+        }
+    }
+    while(!heap.empty()){
+        ListNode * minNode = heap.top();
+        int minValue = minNode->val;
+        heap.pop();
+        ans->next = minNode;
+        ans = ans ->next;
+        if(minNode->next!=NULL){
+            heap.push(minNode->next);
+        }
+    }
+    return temp->next;
+}
+};

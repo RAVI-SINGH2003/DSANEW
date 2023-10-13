@@ -1,0 +1,22 @@
+void inorder(TreeNode<int>* root,vector<int> & traversal){
+    if(root==NULL) return ;
+    inorder(root->left,traversal);
+    traversal.push_back(root->data);
+    inorder(root->right,traversal);
+}
+TreeNode<int> * make_bst(int l ,int r,vector<int> &vec){
+    if(l>r){
+        return NULL;
+    }
+    int mid  = l + (r-l)/2;
+    TreeNode<int> * root = new TreeNode<int>(vec[mid]);
+    root->left = make_bst( l, mid-1,vec);
+    root->right = make_bst(mid+1,r,vec);
+    return root;
+}
+TreeNode<int>* balancedBst(TreeNode<int>* root) {
+   vector<int> vec;
+   inorder(root,vec);
+   root = make_bst(0,vec.size()-1,vec);
+   return root;
+}

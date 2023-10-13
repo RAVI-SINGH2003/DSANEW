@@ -1,0 +1,39 @@
+TC : O(V + 2E) = for bfs undirected graph
+TC : O(N + E) for directed graph
+SC : O(N + N)  = O(N) (For queue , For visited vector)
+
+bool dfs(int node, vector<int> adj[], vector<int> &visited, int parent)
+{
+
+    visited[node] = 1;
+    for (int child : adj[node])
+    {
+        if (!visited[child])
+        {
+            if (dfs(child, adj, visited, node))
+                return true;
+        }
+        else if (parent != child)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool isCycle(int V, vector<int> adj[])
+{
+    vector<int> visited(V);
+    for (int i = 0; i < V; i++)
+    {
+        if (!visited[i])
+        {
+            int parent = -1;
+            if (dfs(i, adj, visited, parent))
+                return true;
+        }
+    }
+
+    return false;
+}

@@ -1,0 +1,61 @@
+TC : O(nlogn) as we are n values in min heap and max heap
+SC : O(n) as n elements are stored in heaps
+reference : Keerti purswani 
+#include <algorithm>
+#include<queue>
+int getMedian(priority_queue<int> &maxheap,priority_queue<int,vector<int>,greater<int>> & minheap,int e,int median) {
+    if (e > median)
+    {
+        minheap.push(e);
+    }
+    else
+    {
+        maxheap.push(e);
+    }
+    int minheapsize = minheap.size();
+    int maxheapsize = maxheap.size();
+    if (minheapsize == maxheapsize)
+    {
+        median = (minheap.top() + maxheap.top()) / 2;
+    }
+    else if ((minheapsize - maxheapsize) == 1)
+    {
+        median = minheap.top();
+    }
+    else if ((maxheapsize - minheapsize) == 1)
+    {
+        median = maxheap.top();
+    }
+    else if ((maxheapsize - minheapsize) > 1)
+    {
+        // maxheap has more elements
+        // pop one and push to minheap
+        minheap.push(maxheap.top());
+        maxheap.pop();
+        median = (minheap.top() + maxheap.top()) / 2;
+    }
+    else if ((minheapsize - maxheapsize)> 1)
+    {
+        // minheap has more elements
+        // pop one and push to maxheap
+        maxheap.push(minheap.top());
+        minheap.pop();
+        median = (minheap.top() + maxheap.top()) / 2;
+    }
+    return median;
+
+}
+vector<int> findMedian(vector<int> &arr, int n){
+	priority_queue<int> maxheap;
+	priority_queue<int,vector<int>,greater<int>> minheap;
+	vector<int> ans;
+	int median = 0;
+	for(int i =0;i<arr.size();i++){
+		int e = arr[i];
+		median = getMedian(maxheap,minheap,e,median);
+	    ans.push_back(median);	
+	}
+
+	return ans;
+	
+}

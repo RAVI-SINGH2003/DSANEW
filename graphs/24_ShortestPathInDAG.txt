@@ -1,0 +1,53 @@
+// Algo : 
+// 1. First find the  Topo Sort of the graph
+// 2. Take out nodes from the stack and relax the edges
+
+TC : O(N+M)
+//O(N+M)
+
+
+Intution : 
+In topo sort if you are at a node , means all nodes from where there is path to this nodes
+have already been visited or processed and this ensures that the minimum distance of reaching this node is fixed and can not be changed again.
+
+void dfs(int node , int vis[],stack<int> & st,vector<pair<int,int>> adj[]){
+    vis[node] =  1;
+    for(auto p :  adj[node]){
+        int nbr = p.first;
+        if(!vis[nbr]){
+            dfs(nbr,vis,st,adj);
+        }
+    }
+    st.push(node);
+}
+vector<int> shortestPath(int N,int M, vector<vector<int>>& edges){
+    vector<pair<int,int>> adj[N];
+    for(int i=0;i<M;i++){
+        adj[edges[i][0]].push_back({edges[i][1],edges[i][2]});
+    }
+    int vis[N]={0};
+    stack<int> st;
+    for(int node = 0; node < N; node++){
+        if(!vis[node])
+        dfs(node , vis , st,adj);
+    }
+    vector<int> dis(N,1e9);
+    dis[0] = 0;
+
+    //O(N+ M)
+    while(!st.empty()){
+        int node = st.top();
+        st.pop();
+        for(auto & p : adj[node]){
+            int nbr = p.first;
+            int nodeToNbrDis = p.second;
+            if(dis[node] + nodeToNbrDis < dis[nbr]){
+                dis[nbr] = dis[node] + nodeToNbrDis;
+            }
+        }
+    }
+    for(int i=0;i<N;i++){
+        if(dis[i]==INT_MAX) dis[i] = -1;
+    }
+    return dis;
+}

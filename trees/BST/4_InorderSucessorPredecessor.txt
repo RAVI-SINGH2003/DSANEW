@@ -1,0 +1,28 @@
+tc : o(logn)
+pair<int, int> predecessorSuccessor(TreeNode *root, int key)
+{
+   TreeNode * curr = root;
+      TreeNode * pre = NULL;
+       while(curr!=NULL){
+           if(curr->data<key){
+               pre = curr;
+               curr = curr->right;
+           }
+           else{
+               curr = curr->left;
+           }
+       }
+      TreeNode * suc = NULL;
+       curr = root;
+        while(curr!=NULL){
+           if(curr->data>key){
+               suc = curr;
+               curr = curr->left;
+           }
+           else{
+               curr = curr->right;
+           }
+       }
+
+       return {pre == NULL ? -1 : pre->data, suc == NULL ? -1 : suc->data};
+}

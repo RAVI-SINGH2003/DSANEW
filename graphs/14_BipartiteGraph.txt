@@ -1,0 +1,63 @@
+#Approach - 1 Using bfs
+bool bfs(vector<int> * &adj, vector<int> & color,int vertex){
+   queue<int> q;
+   q.push(vertex);
+   color[vertex] = 0;
+   while(!q.empty()){
+       int node = q.front();
+       q.pop();
+       for(int neighbour :  adj[node]){
+           if(color[neighbour]==-1){
+               color[neighbour] = !color[node];
+               q.push(neighbour);
+           }
+           else if(color[neighbour]==color[node]){
+             return false;
+           }
+       }
+    }  
+    return true;
+}
+bool isBipartite(int V, vector<int>adj[]){
+   
+  vector<int> color(V,-1);
+  for(int v=0;v<V;v++){
+      if(color[v]==-1){
+          if(!bfs(adj,color,v)){
+              return false;
+          }
+      }
+    
+  }
+  
+   return true;
+}
+
+#approach -2 using dfs
+bool dfs(vector<vector<int>>  &graph, vector<int> & color,int vertex,int clr){
+   color[vertex] = clr;
+    for(int nbr :  graph[vertex]){
+        if(color[nbr]==-1){
+            if(!dfs(graph,color,nbr,!clr))
+            return false;
+        }
+        else if(color[nbr]==color[vertex]){
+            return false;
+        }
+    }
+    return true;
+}
+bool isBipartite(vector<vector<int>>& graph) {
+    int V = graph.size();
+    vector<int> color(V,-1);
+    for(int v=0;v<V;v++){
+        if(color[v]==-1){
+            if(!dfs(graph,color,v,0)){
+                return false;
+            }
+        }
+        
+    }
+
+    return true;
+}

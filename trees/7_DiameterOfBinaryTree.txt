@@ -1,0 +1,50 @@
+Method : 1
+TC : O(n^2) SC : O(h) h = n (skewed tree)
+
+int height(Node * root){
+    if(root==NULL)
+       return 0;
+       return 1 + max(height(root->left),height(root->right));
+}
+int diameter(Node* root) {
+    if(root==NULL) return 0;
+    int op1 = diameter(root->left);
+    int op2 = diameter(root->right);
+    int op3 =  1 + height(root->left) + height(root->right);
+    return max(op1,max(op2,op3));
+}
+
+Method : 2
+TC : O(n) SC : O(h) h = n (skewed tree)
+pair<int , int > diameterFast(Node * root){
+    if(root==NULL){
+        pair<int,int> p = make_pair(0,0);
+        return p;
+    }
+    pair<int,int> left = diameterFast(root->left);
+    pair<int,int> right = diameterFast(root->right);
+    int op1 = left.first;
+    int op2 = right.first;
+    int op3 = 1 + left.second + right.second;
+    pair <int,int> ans = make_pair(max(op1,max(op2,op3)),1+max(left.second , right.second));
+    return ans;
+}
+int diameter(Node* root) {
+    return diameterFast(root).first;
+}
+
+Method 3 : using height only
+TC : O(n) SC : O(h) h = n (skewed tree)
+int height(Node * root,int  &ans){
+    if(root==NULL)
+        return 0;
+        int lh = height(root->left,ans);
+        int rh = height(root->right,ans);
+        ans = max(ans,1+lh+rh);
+        return 1 + max(lh,rh);
+}
+int diameter(Node* root) {
+    int ans = 0;
+    height(root,ans);
+    return ans;
+}

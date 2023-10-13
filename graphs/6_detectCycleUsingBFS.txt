@@ -1,0 +1,47 @@
+// SC : O(n + n) = O(n); ( n for recursion stack space , visted)
+// TC : O(N + 2E) for undirected graph since we are visiting each nodes and then all neighbouring nodes
+// TC : O(N + E) for directed graph
+
+SC : O(N + N)  = O(N) (For queue , For visited vector)
+bool bfs(int node, vector<int> adj[], vector<int> &visited)
+{
+    queue<pair<int, int>> q;
+    visited[node] = 1;
+    q.push({node, -1});
+    while (!q.empty())
+    {
+        int curr = q.front().first;
+        int parent = q.front().second;
+        q.pop();
+        for (auto child : adj[curr])
+        {
+            if (!visited[child])
+            {
+                visited[child] = 1;
+                q.push({child, curr});
+            }
+            // if adjacent node is visited and is not it's own parent node
+            else if (parent != child)
+            {
+                // yes it is a cycle
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool isCycle(int V, vector<int> adj[])
+{
+    vector<int> visited(V);
+    for (int i = 0; i < V; i++)
+    {
+        if (!visited[i])
+        {
+            if (bfs(i, adj, visited))
+                return true;
+        }
+    }
+
+    return false;
+}

@@ -1,0 +1,39 @@
+# Bellman ford algo features
+1. Not work on undirected graphs convert to directed graphs
+2. help in detecting negative cycles.
+3. Does not work  graphs with negative cycles.
+
+ # NOTE - No algo can find shortest path in a graph with negative cycle as in a negative cycle the path will keep on minizing forever
+ which can lead to tle in dijakstra and Relaxation of edges on Vth iteration in bellman_ford
+
+#Approach - 
+Relax edges N-1 times
+since in a graph of N Nodes , in worst case you will 
+take N-1 edges to reach from first to the last 
+thereby we iterate for N - 1  times
+
+#how to detect negative cycles ?
+ANS - if on Nth iteration reduction happens then negative cycle is present.
+
+TC : O(VE)
+vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+    vector<int> dist(V,1e8);
+    dist[S] = 0;
+    for(int i = 1; i <=V; i++){
+        bool isRelaxed = false;
+        for(auto v : edges){
+            int parent = v[0];
+            int child = v[1];
+            int cost = v[2];
+            if(dist[parent] + cost  < dist[child]){
+                dist[child] = dist[parent] + cost;
+                isRelaxed = true;
+            }
+        }
+        if(i==V && isRelaxed){
+            return {-1};
+        }
+    }
+    return dist;
+    
+}

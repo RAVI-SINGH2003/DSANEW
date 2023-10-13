@@ -1,0 +1,37 @@
+TC : as TC of dijakstra algorithm is ElogV
+but no priority_queue so TC : E which is flights.size();
+TC : O(flights.size())
+
+TC : O(V*E)
+int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+    vector<pair<int,int>> adj[n];
+    for(auto it: flights){
+        adj[it[0]].push_back({it[1],it[2]});
+    }
+    
+    queue<pair<int,pair<int,int>>> q;
+    q.push({0,{src,0}});
+    vector<int> cost(n,1e9);
+    cost[src]=0;
+    
+    while(!q.empty()){
+        int stop=q.front().first;
+        int curr_city=q.front().second.first;
+        int curr_cost=q.front().second.second;
+        q.pop(); 
+        
+        for(auto it: adj[curr_city]){
+            int next_city=it.first;
+            int cost_to_next_city=it.second;
+            
+            if(curr_cost + cost_to_next_city <cost[next_city] && stop<=k){
+                cost[next_city] = curr_cost + cost_to_next_city;
+                q.push({stop+1,{next_city,cost[next_city]}});
+                
+            }
+        }
+    }
+    
+    if(cost[dst]==1e9) return -1;
+    return cost[dst];
+}

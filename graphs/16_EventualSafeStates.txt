@@ -1,0 +1,62 @@
+Terminal Nodes - outdegree 0;
+Safe nodes - all nodes whose all paths lead to terminal node
+// all nodes whose all path lead to safe  nodes are also safe.
+
+#Approach -1 using cycle detection in directed graph using DFS
+#Approach - 2 Using Kahns algo
+
+
+#Approach - 1 using DFS 
+Idea  - we just need to mark which nodes are part of cycle and which nodes are connected to a cycle
+and filter all nodes which are not marked means the nodes which are not associated with cycles and those nodes will be our answer.
+
+Why this idea works ?
+
+//All nodes of a cycle can never be terminal nodes as outdegree is not 0
+//All nodes of a cycle can never be safe nodes as there will always be a path from a node in a cycle to other nodes in cycle which will make you loop in never ending path 
+//ans this means this path can never lead you to a terminal node thus, that node can never be safe node.
+//any node connected to a cycle will have a path from that node which will lead to in to cycle thus it is also not safe node
+or we can understand it like we already know that the cycle nodes are not safe nodes so nodes connected to non safe nodes will also be nonsafe  
+
+bool dfs(int node,vector<bool> & visited,vector<bool> & pathVis ,vector<int> * &adj,auto & isCyclePart){
+    visited[node] = true;
+    pathVis[node] = true;
+    for(int neighbour : adj[node]){
+        if(!visited[neighbour]){
+            if(dfs(neighbour ,visited,pathVis, adj,isCyclePart))
+            {
+                isCyclePart[node] = true;
+                return true;
+            }
+        }
+        else if(pathVis[neighbour]){
+            isCyclePart[node] = true;
+            return true;
+        }
+    }
+    pathVis[node] = false;
+    return false;
+}
+vector<int> eventualSafeNodes(int V, vector<int> adj[]) {
+
+    vector<bool> visited(V,false);
+    vector<bool> pathVis(V,false);
+    vector<bool> isCyclePart(V,false); 
+    vector<int> ans;
+    for(int node=0;node<V;node++){
+        if(!visited[node]){
+            //just start dfs from every node and mark all nodes that are part of cycle which comes in path 
+            //we are not breaking loop as soon as we find a cycle because we have to check and mark all nodes that are part of cycle (as there can be more than 1 cycles also)
+            //we are doing this to ensure all nodes that are conneted to any cycles are also marked b/c as soon as we start dfs from that node it will eventaully 
+            //enter the cycle and will be marked as part of cycle.
+            dfs(node , visited ,isCyclePart,adj,isCyclePart);
+        }
+    }
+    //nodes which are not part of cycle or connected to it are ans nodes
+        for(int node=0;node<V;node++){
+        if(!isCyclePart[node]){
+            ans.push_back(node);
+        }
+    }
+    return ans;
+}

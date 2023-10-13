@@ -1,0 +1,33 @@
+#Approach = In the same Path if i visited the same node again then cycle using DFS
+#Approach = Using Kahns's algo
+class Solution {
+  public:
+    // Function to detect cycle in a directed graph.
+    bool dfs(int node,vector<bool> & visited,vector<bool> & visited2 ,vector<int> * &adj,int parent){
+        visited[node] = true;
+        visited2[node] = true;
+        for(int neighbour : adj[node]){
+           if(!visited[neighbour]){
+               if(dfs(neighbour ,visited,visited2, adj,node))
+                return true;
+           }
+           else if(visited2[neighbour]){
+                   return true;
+           }
+           
+        }
+       visited2[node] = false;
+       return false;
+    }
+    bool isCyclic(int V, vector<int> adj[]) {
+      vector<bool> visited(V,false);
+      vector<bool> visited2(V,false);
+       for(int node=0;node<V;node++){
+          if(!visited[node]){
+               if(dfs(node , visited ,visited2,adj,-1))
+                 return true;
+          }
+       }
+       return false;
+    }
+};

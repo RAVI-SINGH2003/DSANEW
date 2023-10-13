@@ -1,0 +1,33 @@
+#Approach - Using kahn's algo
+#step1 = reverse all edges
+#now apply kahn's algo and it will only traverse safe nodes which are not the part of cycle 
+or connected to a cycle or lead to a cycle
+
+vector<int> eventualSafeNodes(int V, vector<int> adj[]) {
+
+    vector<int> ans;
+    vector<int> indegree(V);
+    vector<int> newAdj[V];
+    for(int node=0;node<V;node++){
+        for(int nbr :  adj[node]){
+            newAdj[nbr].push_back(node);
+            indegree[node]++;
+        }
+    }
+    queue<int> q;
+    for(int node=0;node<V;node++){
+        if(!indegree[node]) q.push(node); 
+    }
+    while(!q.empty()){
+        int node = q.front();
+        q.pop();
+        ans.push_back(node);
+        for(int nbr : newAdj[node]){
+            indegree[nbr]--;
+            if(indegree[nbr]==0)
+            q.push(nbr);
+        }
+    }
+    sort(ans.begin(),ans.end());
+    return ans;
+}

@@ -1,0 +1,44 @@
+TC : O(klogk) + O((n*k-k)*logk) = O(n*klogk)
+SC : O(k) + O(n*k)
+#include <bits/stdc++.h> 
+class node{
+public :
+int data;
+int row;
+int col;
+node(int data ,int row,int col){
+    this->data = data;
+    this->row = row;
+    this->col = col;
+}
+};
+class compare{
+public :
+bool operator()(node * node1 , node * node2)
+{
+        return (node1-> data > node2->data);
+}
+};
+vector<int> mergeKSortedArrays(vector<vector<int>>&kArrays, int k)
+{
+vector<int> ans;
+priority_queue<node * , vector<node*> ,compare> heap;
+for(int i=0;i<k;i++){
+    node * newNode = new node(kArrays[i][0],i,0);
+    heap.push(newNode);
+}
+while(!heap.empty()){
+    node * minNode = heap.top();
+    int minValue = minNode->data;
+    int minNodeRow = minNode->row;
+    int minNodeCol = minNode->col;
+    heap.pop();
+    ans.push_back(minNode->data);
+    if(minNodeCol+1 < kArrays[minNodeRow].size()){
+    node * next = new node(kArrays[minNodeRow][minNodeCol+1] ,minNodeRow,minNodeCol+1);
+    heap.push(next);
+    }
+}
+return ans;
+
+}

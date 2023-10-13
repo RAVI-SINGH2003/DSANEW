@@ -1,0 +1,40 @@
+Modificatio of Vertical Traversal 
+ans = list of elements with first occurence for a index value
+vector<int> topView(Node *root)
+    {
+        vector<int> ans;
+        
+     if(root==NULL) return ans;
+       queue<pair<Node* , int >> q;
+       q.push({root, 0});
+       map<int ,int> mpp;
+       while(!q.empty())
+       {
+         
+            pair<Node * ,int > temp = q.front();
+            int i = temp.second;
+            if(mpp.find(i)==mpp.end()){
+                 mpp[i] = temp.first->data;
+            }
+             int index;
+             if(temp.first->left)
+             {
+                index = (temp.second-1);
+                q.push({temp.first->left,index});
+
+             }
+               if(temp.first->right)
+             {
+                index = (temp.second+1);
+                q.push({temp.first->right,index});
+
+             }
+             q.pop();
+
+       }
+       for(pair<int,int> p : mpp){
+            ans.push_back(p.second);
+       }
+       return ans;
+
+    }

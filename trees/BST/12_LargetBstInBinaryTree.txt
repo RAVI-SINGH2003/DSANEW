@@ -1,0 +1,44 @@
+#Approach = 1
+//tc : o(n*n) for validating * counting no of nodes
+//sc : o(h) in worst case o(n)
+//for each node validate bst to check it is bst or not
+//if yes count the no of nodes in bst using any traversal
+
+
+
+#Approach -2 
+tc : o(n)
+sc : o(h)
+class Value{
+    public :
+    int count;
+    int maxi;
+    int mini;
+    Value(int count , int maxi , int mini){
+     this->count = count;
+     this->maxi = maxi;
+     this->mini = mini;
+    }
+};
+Value helper(TreeNode * root){
+    if(root==NULL){
+     Value v(0,INT_MIN , INT_MAX);
+     return v;
+    }
+    Value left = helper(root->left);
+    Value right = helper(root->right);
+    if(left.maxi<root->data && root->data <right.mini){  
+        Value v(left.count+right.count+1,max(root->data,right.maxi) , min(root->data,left.mini));
+        return v;
+    }
+    else
+    {
+        Value v(max(left.count, right.count),INT_MAX , INT_MIN);
+        return v;
+    }
+
+}
+
+int largestBST(TreeNode * root){
+   return helper(root).count;
+}

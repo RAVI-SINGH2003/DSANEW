@@ -1,0 +1,51 @@
+ assign indexes to each node
+ make list of nodes with similar indexes
+ store ans according to sorted order of indexes
+  vector<int> verticalOrder(Node *root)
+    {
+      vector<int> ans;
+        
+     if(root==NULL) return ans;
+       queue<pair<Node* , int >> q;
+       q.push({root, 0});
+       map<int ,vector<int>> mpp;
+       vector<int> ds;
+
+
+       while(!q.empty())
+       {
+         
+            pair<Node * ,int > temp = q.front();
+            int i = temp.second;
+            if(mpp.find(i)!=mpp.end()){
+              
+                 ds = mpp[i];
+            }
+            else{
+                 ds.clear();
+            }
+            ds.push_back(temp.first->data);
+             mpp[i] = ds;
+             int index;
+             if(temp.first->left)
+             {
+                index = (temp.second-1);
+                q.push({temp.first->left,index});
+
+             }
+               if(temp.first->right)
+             {
+                index = (temp.second+1);
+                q.push({temp.first->right,index});
+
+             }
+             q.pop();
+
+       }
+       for(auto & p : mpp){
+           for(int e : p.second)
+            ans.push_back(e);
+       }
+       return ans;
+
+    }

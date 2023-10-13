@@ -1,0 +1,55 @@
+void dfs(auto & grid , auto & visited, int n,int m , int r , int  c){
+    visited[r][c]  = true;
+    pair<int,int> arr[] = {{-1,0},{1,0},{0,-1},{0,1}};
+    for(int k=0;k<4;k++){
+        int delx = arr[k].first;
+        int dely = arr[k].second;
+        int newr = r + delx;
+        int newc = c + dely;
+        if(newr >=0 && newr <n && newc >=0 && newc <m && grid[newr][newc]=='O' && !visited[newr][newc]){
+            dfs(grid,visited,n,m,newr,newc);
+        }
+    }
+    }
+vector<vector<char>> fill(int n, int m, vector<vector<char>> mat)
+{
+
+    //1.first find all the O at boundaries and move inside the grid from there and mark all O as visisted(means they
+    // can not be converted to X as they are not surrounded by X's)
+    //2.Now again traverse the grid to find the O and check if it's the O which can be flipped(not visited) , if it is just flip
+    
+    vector<vector<int>> visited(n,vector<int>(m,0));
+    vector<vector<char>> grid = mat;
+    
+    //1.first find all the O at boundaries and move inside the grid from there and mark all O as visisted(means they can not be converted to X)
+    //1st row
+    for(int c=0;c<m;c++){
+        if(grid[0][c]=='O'&& !visited[0][c])
+        dfs(grid,visited,n,m,0,c);
+    }
+    //last column
+    for(int r=0;r<n;r++){
+        if(grid[r][m-1]=='O' && !visited[r][m-1])
+        dfs(grid,visited,n,m,r,m-1);
+    }
+    //last row
+    for(int c=0;c<m;c++){
+        if(grid[n-1][c]=='O' && !visited[n-1][c])
+        dfs(grid,visited,n,m,n-1,c);
+    }
+    //1st column
+    for(int r=0;r<n;r++){
+        if(grid[r][0]=='O' && !visited[r][0])
+        dfs(grid,visited,n,m,r,0);
+    }
+    //2.Now again traverse the grid to find the O and check if it's the O which can be flipped(not visited) , if it is just flip
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(grid[i][j]=='O' && !visited[i][j]){
+                grid[i][j]='X';
+            }
+        }
+    }
+
+    return grid;
+}

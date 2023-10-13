@@ -1,0 +1,20 @@
+pair<int,int> height(Node * root){
+    if(root==NULL) return {0,0};
+    auto left = height(root->left);
+    auto right = height(root->right);
+    
+    if(left.first > right.first){
+        return make_pair(1+left.first , root->data + left.second );
+    }
+    else if(left.first==right.first){
+        return make_pair(1+left.first,root->data + max(left.second,right.second));
+    }
+
+    return make_pair(1+right.first , root->data + right.second );
+}
+
+int sumOfLongRootToLeafPath(Node *root)
+{
+    auto  p = height(root);
+    return p.second;
+}

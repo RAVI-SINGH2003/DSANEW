@@ -1,0 +1,21 @@
+//  TC : O(k) + O(n-k) = building heap from k elements +  again heapifying n-k elements
+// in worst case k = n  = O(n)
+// SC : O(k) for prioity queue
+
+int kthSmallest(int arr[], int l, int r, int k) {
+    priority_queue<int> pq;
+    int i = 0;
+    for(i=0;i<k;i++){
+        pq.push(arr[i]);
+    }
+    int ans = -1;
+    while(i< (r-l+1)){
+        if(pq.top() >  arr[i]){
+            pq.pop();
+            pq.push(arr[i]);
+        }
+        i++;
+    }
+    
+        return pq.top();
+}

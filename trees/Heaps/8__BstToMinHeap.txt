@@ -1,0 +1,33 @@
+Given a binary search tree which is also a complete binary tree. The problem is to convert the given BST into a Min Heap with the condition that all the values in the left subtree of a node should be less than all the values in the right subtree of the node. This condition is applied to all the nodes, in the resultant converted Min Heap. 
+
+//it means 
+Node < left Node < right left < right
+=Node < left < right = preorder traversal
+TC : O(n)
+SC : O(h)
+
+void inOrder(BinaryTreeNode *root,vector<int> & ans)
+{
+    if (root == NULL)
+        return;
+    inOrder(root->left,ans);
+     ans.push_back(root->data);
+    inOrder(root->right,ans);
+}
+
+
+BinaryTreeNode * buildHeap(vector<int> & ans,int &i, BinaryTreeNode * root){
+    if(root==NULL)return NULL;
+    root->data = ans[i++];
+    root->left = buildHeap(ans,i ,root->left);
+    root->right = buildHeap(ans,i,root->right);
+    return root;
+}
+   
+BinaryTreeNode* convertBS(BinaryTreeNode* root)
+{
+   vector<int> ans;
+   inOrder(root,ans);
+   int i =0;
+   return buildHeap(ans,i,root);
+}

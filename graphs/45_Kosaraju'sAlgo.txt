@@ -1,0 +1,68 @@
+//kosaraju's algo is valid only for Directed Graph 
+// Used to find the no of strongly connected components or print strongly connected components.
+//SCC - in a scc if there is node u and v the i can reach from u to v and viceversa also and this is 
+true for all nodes pairs in SCC
+
+//Steps : -
+ //1. sorting the edges according to finishing time
+ //2. Reversing the graph
+ //3.do a dfs
+ Intution : - i know i can move from 1 scc to another
+ if i reverse the edges i will not be able to .
+ so when i will do a dfs i will do it for individual scc only.
+
+class Solution
+{
+	public:
+	stack<int>  st;
+     vector<vector<int>> SCC;
+     vector<int> singleSCC;
+	//Function to find number of strongly connected components in the graph.
+	void dfs(int node , int vis[] ,vector<vector<int>> &adj,int flag){
+	    vis[node] = 1;
+	    for(int nbr : adj[node]){
+	        if(!vis[nbr])
+	        dfs(nbr,vis,adj,flag);
+	    }
+	    if(flag==1)
+	    st.push(node);
+        else
+        singleSCC.push_back(node);
+	}
+    int kosaraju(int V, vector<vector<int>>& adj)
+    {
+       //kosaraju's algo is valid only for Directed Graph    
+       int vis[V] = {0};
+       int flag = 1;
+       vector<vector<int>> SCC;
+       //1. sorting the edges according to finishing time
+       for(int i=0;i<V;i++){
+           if(!vis[i]){
+               dfs(i,vis,adj,flag);
+           }
+       }
+      //2. Reversing the graph
+       vector<vector<int>> newAdj(V);
+       for(int i=0;i<V;i++){
+           for(int nbr :  adj[i]){
+               newAdj[nbr].push_back(i);
+           }
+       }
+       //3.do a dfs
+       int newvis[V] = {0};
+       flag =0;
+       int count = 0;
+       while(!st.empty()){
+           int node = st.top();
+           st.pop();
+           if(!newvis[node]){
+               dfs(node,newvis,newAdj,flag);
+               SCC.push_back(singleSCC);
+               singleSCC.clear();
+               count++;
+           }
+       }
+       
+       return count;
+    }
+};

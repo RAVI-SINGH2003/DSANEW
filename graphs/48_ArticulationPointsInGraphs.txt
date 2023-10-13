@@ -1,0 +1,68 @@
+#Articulation Points - 
+A node on whose removal the graph will be divided in to two or more components.
+
+#Approach - 1 : Brute Force
+// remove each node and count the no of connected components using dfs if it increases the node is articulation point.
+TC : O(V*(V+E))
+
+
+#Approach - 2
+//{ Driver Code Starts
+//Initial Template for C++
+
+#include<bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+//User function Template for C++
+
+class Solution {
+  public:
+    void dfs(int node , int parent,int tin[] ,int low[],vector<int> &vis,vector<int> adj[],int &timer,vector<int> & mark){
+        vis[node] = 1;
+        tin[node] = low[node] = timer++;
+        int child_count = 0;
+        for(int child : adj[node]){
+            if(child==parent) continue;
+            if(!vis[child]){
+                dfs(child,node , tin , low , vis , adj,timer,mark);
+                low[node] = min(low[node],low[child]);
+                if(low[child] >= tin[node] && parent!=-1){
+                   mark[node] = 1;
+                }
+                child_count++;
+            }
+            else{
+                low[node] = min(low[node],tin[child]); 
+            }
+        }
+        if(parent==-1 && child_count>1){
+            mark[node] = 1;
+        }
+        
+    
+    }
+    vector<int> articulationPoints(int n, vector<int>adj[]) {
+       vector<int> vis(n,0);
+       int tin[n];
+       int low[n];
+       vector<int> mark(n,0);
+       vector<int> ans;
+       int timer = 0;
+       
+       for(int i=0;i<n;i++){
+           if(!vis[i])
+           {
+               dfs(i,-1,tin,low,vis,adj,timer,mark);
+           }
+       }
+       for(int i=0;i<n;i++){
+           if(mark[i]==1)
+           ans.push_back(i);
+       }
+       if(ans.size()==0) return {-1};
+       sort(ans.begin(),ans.end());
+       return ans;
+    }
+};
+

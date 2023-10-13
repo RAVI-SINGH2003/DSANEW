@@ -1,0 +1,55 @@
+ int minTime(Node* root, int target) 
+    {
+       unordered_map<Node*,Node*> nodeToParent;
+      
+       queue<Node*> q;
+       q.push(root);
+       nodeToParent[root] = NULL;
+       Node* pos = NULL;
+       while(!q.empty()){
+           int n = q.size();
+           for(int i=1;i<=n;i++){
+               Node * temp = q.front();
+               q.pop();
+               if(temp->data==target){
+                   pos = temp;
+               }
+               
+               if(temp->left){
+                   q.push(temp->left);
+                   nodeToParent[temp->left] = temp;
+               }
+               if(temp->right){
+                   q.push(temp->right);
+                   nodeToParent[temp->right] = temp;
+               }
+           }
+       }
+       q.push(pos);
+       int ans = -1;
+       unordered_map<Node* , bool> visited;
+       visited[pos]=true;
+       
+       while(!q.empty()){
+           int n = q.size();
+           for(int i=1;i<=n;i++){
+               Node * temp = q.front();
+               q.pop();
+               if(nodeToParent[temp]!=NULL &&visited[nodeToParent[temp]]==false){
+                   q.push(nodeToParent[temp]);
+                   visited[nodeToParent[temp]]=true;
+               }
+               if(temp->left &&visited[temp->left]==false)
+               {
+                   q.push(temp->left);
+                   visited[temp->left] = true;
+               }
+               if(temp->right && visited[temp->right]==false){
+                   q.push(temp->right);
+                   visited[temp->right]=true;
+               }
+           }
+           ans++;
+       }
+       return ans;
+    }

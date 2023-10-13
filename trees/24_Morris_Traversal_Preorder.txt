@@ -1,0 +1,34 @@
+Self notes:
+In-order Morris Traversal:
+🌳 1st case: if left is null, print current node and go right
+🌳 2nd case: before going left, make right most node on left subtree connected to current node, then go left
+🌳 3rd case: if thread is already pointed to current node, then remove the thread
+
+ vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> inorder;
+        TreeNode * curr = root;
+        while(curr!=NULL){
+            if(curr->left==NULL) {
+                inorder.push_back(curr->val);
+                curr = curr->right;
+            } 
+            else{
+                TreeNode * temp = curr->left;
+                while(temp!=NULL && temp->right!=NULL && temp->right!=curr){
+                    temp = temp->right;
+                }
+                if(temp!=NULL && temp->right==NULL){
+                    //connecting the string
+                    inorder.push_back(curr);
+                    temp->right=curr;
+                    curr = curr->left;
+                }
+                else {
+                    temp->right = NULL;
+                    curr = curr->right;
+                }
+            }
+          
+       }
+          return inorder ;
+    }

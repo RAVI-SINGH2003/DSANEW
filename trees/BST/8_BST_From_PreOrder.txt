@@ -1,0 +1,87 @@
+#Approach no -1;
+//simply traverse the preorder array and insert keys in BST
+tc: o(n*n);
+sc : o(1)
+
+BinaryTreeNode<int> * insertNode(BinaryTreeNode<int> * root, int value){    
+   BinaryTreeNode<int> * curr = root,*prev = NULL;
+   while(curr!=NULL){
+       if(value <=  curr->data){
+           prev = curr;
+           curr = curr->left;
+       }
+       else{
+           prev = curr;
+           curr = curr->right;
+       }   
+   }
+    BinaryTreeNode<int> * newNode = new BinaryTreeNode<int>(value);
+    if(prev==NULL){
+        return newNode;
+    }
+    if(prev->data >=value)
+    prev->left = newNode;
+    else
+    prev->right = newNode;
+    return root;
+}
+BinaryTreeNode<int>* preorderToBST(vector<int> &preorder) {
+   BinaryTreeNode<int> * root = NULL;
+   for(int i=0;i<preorder.size();i++){
+       root =  insertNode(root,preorder[i]);
+   }
+   return root;
+}
+
+
+#Approach no -2;
+tc : o(nlogn) + o(n) //sort + traversal on each key to make node
+sc : o(n) // for recursion
+//sort the preorder to get inorder
+//make Binary tree(BST) from these two already done.
+
+TreeNode* solve(int index , int l ,int r , vector<int>& pre, vector<int> & in,  unordered_map<int,vector<int>> mpp){
+    if(l>r || index>=pre.size()) return NULL;
+    int rootVal = pre[index];
+    int mid = mpp[rootVal].back();
+    mpp[rootVal].pop_back();
+    TreeNode * node = new TreeNode(rootVal);
+    node->left = solve(index+1,l,mid-1,pre,in,mpp);
+    node->right = solve(index+1+mid-l,mid+1,r,pre,in,mpp);
+    return node;
+}
+TreeNode* bstFromPreorder(vector<int>& preorder) {
+   vector<int> inorder = preorder;
+   sort(inorder.begin(),inorder.end());
+   unordered_map<int,vector<int>> mpp;
+   for(int i=inorder.size()-1;i>=0;i--){
+       mpp[inorder[i]].push_back(i);
+   }
+   int index = 0; // for root from preorder 
+   int l = 0; // for inorder
+   int r = inorder.size()-1; //for inorder
+   return solve(index,l,r,preorder,inorder, mpp);
+}
+
+#Appproach no - 3 , Use range concept (min,max) used in validate bst
+tc : o(n) 
+sc : o(n) for recursion;
+BinaryTreeNode<int> * solve(int &i , vector<int> & pre,int min  , int max){
+    if(i>=pre.size()) return NULL;
+    int value = pre[i];
+    if(min <value && value<max){
+        BinaryTreeNode<int> * node = new BinaryTreeNode<int>(value);
+        i++;
+        node->left =  solve(i , pre,min  ,value);
+        node->right = solve(i , pre,value  , max);
+        return node;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+BinaryTreeNode<int>* preorderToBST(vector<int> &preorder) {
+    int i = 0;
+    return solve(i,preorder,INT_MIN , INT_MAX);
+}

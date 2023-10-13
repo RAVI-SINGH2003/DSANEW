@@ -1,0 +1,44 @@
+TC : N * wordLength * 26 (unordered_set)
+TC : N* wordLength * 26 * logn (set)
+
+example - Begin = bat endWord = coz
+["pat" , "bot" ,"pot" ,"poz" ,"coz"]
+bat -> pat -> pot -> poz -> coz
+bat -> bot -> pot -> poz -> coz
+
+vector<vector<string>> findSequences(string beginWord, string endWord, vector<string>& wordList) {
+    unordered_set<string> sett(wordList.begin(),wordList.end());
+    queue<vector<string>> q;
+    q.push({beginWord});
+    vector<vector<string>> ans;
+    while(!q.empty()){
+        int n = q.size();
+        vector<string> newWordsAtLevel;
+        for(int sz = 1; sz<=n ;sz++){
+            auto seq = q.front();
+            string word = seq.back();
+            q.pop();
+            if(word==endWord){
+                ans.push_back(seq);
+            }
+            for(int i=0;i<word.length();i++){
+                string newWord = word;
+                for(char ch = 'a'; ch <='z';ch++){
+                    newWord[i] = ch;
+                    if(sett.count(newWord)){
+                        seq.push_back(newWord);
+                        q.push(seq);
+                        seq.pop_back();
+                        newWordsAtLevel.push_back(newWord);
+                    }
+                }
+            }
+        }
+        //remove the word only after all items of curent level has been processed
+        for(string w : newWordsAtLevel){
+            sett.erase(w);
+        }
+
+    }
+    return ans;
+}

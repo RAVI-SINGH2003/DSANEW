@@ -1,0 +1,45 @@
+#define ll long long
+class Solution {
+public:
+   
+    priority_queue<pair<ll,ll>,vector<pair<ll,ll>>,greater<pair<ll,ll>>>pq;
+    
+    int countPaths(int n, vector<vector<int>>& roads) {
+        vector<pair<ll,ll>> adj[n];
+
+        
+        for(auto &v :  roads)
+            adj[v[0]].push_back({v[1],v[2]}),adj[v[1]].push_back({v[0],v[2]});
+        
+        pq.push({0,0});
+        
+        vector<ll> distance(n,LONG_MAX);
+        distance[0] = 0;
+        vector<ll> dp(n,1);
+        
+        while(!pq.empty())
+        {
+            auto [dist,node] = pq.top();
+            pq.pop();
+        
+            for(auto[child,count]  : adj[node])
+            {
+                
+                if(dist + count < distance[child]){
+                    distance[child] = dist + count;
+                    pq.push({dist+count,child});   
+                    dp[child] = dp[node];
+                }
+                else if(dist + count == distance[child])
+                    dp[child] = (dp[child] + dp[node])%1000000007;
+            }
+        }
+        
+    
+        
+        return dp[n-1];
+        
+        
+        
+    }
+};

@@ -1,0 +1,119 @@
+#Approach = to make a connected graph we need minimum n-1 edges where n is no of nodes
+# If I have a graph of C  components then i need  minimum C-1 edges to make a connected graph
+
+#Approach - 1 Using DSU
+class DSU
+{
+public:
+    vector<int> parent, size;
+
+    DSU(int n)
+    {
+        size.resize(n , 1);
+        parent.resize(n);
+        for (int i = 0; i < n; i++)
+        {
+            parent[i] = i;
+        }
+    }
+    int findUParent(int node)
+    {
+        if (parent[node] == node)
+        {
+            return node;
+        }
+        // this is path compression
+        parent[node] = findUParent(parent[node]);
+        return parent[node];
+    }
+
+    void unionBySize(int u, int v)
+    {
+        // 1. find the parent of node
+        int ulp_u = findUParent(u);
+        int ulp_v = findUParent(v);
+
+        if (ulp_u == ulp_v)
+        {
+            return;
+        }
+        // 2. find the rank of nodes
+        // 3. connect node with smaller size with bigger size , if size same connect anyone to anyone
+        if (size[ulp_u] < size[ulp_v])
+        {
+            parent[ulp_u] = ulp_v;
+            size[ulp_v] += size[ulp_u];
+        }
+        else
+        {
+            parent[ulp_v] = ulp_u;
+            size[ulp_u] += size[ulp_v];
+        }
+    }
+};
+
+class Solution {
+public:
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        DSU dsu(n);
+        int redundantEdges = 0;
+        for(auto p :  connections){
+            int u = p[0];
+            int v = p[1];
+
+            // there is cycle if following condition holds
+            if(dsu.findUParent(u)==dsu.findUParent(v)){
+                redundantEdges++;
+            }
+            else{
+                dsu.unionBySize(u,v);
+            }
+        }
+        int noOfComponents = 0;
+        for(int i=0;i<n;i++){
+            if(dsu.findUParent(i)==i){
+              noOfComponents++;
+            }
+        }
+        int noOfEdgesRequiredToMakeGraphConnected  = noOfComponents - 1;
+        if(redundantEdges>=noOfEdgesRequiredToMakeGraphConnected){
+            return noOfEdgesRequiredToMakeGraphConnected;
+        }
+
+        return -1;
+    }
+};
+
+
+#Apprroach - 2 Using DFS
+class Solution {
+  public:
+   void dfs(int * vis , vector<int> adj [], int node){
+       vis[node] = 1;
+       for(int i : adj[node]){
+           if(!vis[i])
+           dfs(vis,adj,i);
+       }
+   }
+    int Solve(int n, vector<vector<int>>& edge) {
+        int edgeCount = edge.size();
+
+        //if no of edges is less than n-1 edges the it is not possible to make a connected graph or a spanning tree
+        
+        if(edgeCount < n-1){
+            return -1;
+        }
+        vector<int> adj[n];
+        for(auto p :  edge){
+            adj[p[0]].push_back(p[1]);
+            adj[p[1]].push_back(p[0]);
+        }
+        int vis[n]= {0};
+        int count =0;
+        for(int i=0;i<n;i++){
+            if(!vis[i])
+            dfs(vis,adj,i),count++;
+        }
+        return count-1;
+    }
+};

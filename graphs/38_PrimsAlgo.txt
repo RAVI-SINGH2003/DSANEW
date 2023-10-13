@@ -1,0 +1,46 @@
+*IMPORTANT* POINTS FOR MST:
+1-> If each edge has a distinct weight then there will be only one & unique MST.
+2-> A complete undirected graph can have n^(n-2) number of Spanning Trees. For example : Consider a triangle which have 3 vertices and 3 edges so n=3 || 3^(3-2) => 3. Hence , it would have 3 spanning trees.
+3-> From a Complete graph by removing max(e-n+1) edges, we can construct a Spanning Tree.
+
+#Greedy methods for finding MST 
+1. Kruskal's algo - DSU
+2. Prim's algo
+
+TC : O(E.logE)
+int spanningTree(int V, vector<vector<int>> adj[])
+{
+    priority_queue<pair<int,pair<int,int>> ,vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>>> q;
+    // {wt,parent,node}
+
+    //parent ---wt--- node;
+
+    vector<int> vis(V,0);
+    q.push({0,{-1,0}});
+    int mst_cost = 0;
+
+    vector<pair<int,int>> MST;  //stores mst { {parent,node} , {} ,{} ,...}
+    // O(E)
+    while(!q.empty()){
+        //O(log E)
+        int parent = q.top().second.first;
+        int node = q.top().second.second;
+        int wt = q.top().first;
+        q.pop();
+        if(vis[node])
+        continue;
+        vis[node]  = 1;
+        MST.push_back(q.top().second);
+        mst_cost+=wt;
+        
+        //E.logE
+        for(auto p : adj[node]){
+            int nbr = p[0];
+            int edgWt = p[1];
+            if(!vis[nbr]){
+                q.push({edgWt,{node,nbr}});
+            }
+        }
+    }
+    return mst_cost;
+}

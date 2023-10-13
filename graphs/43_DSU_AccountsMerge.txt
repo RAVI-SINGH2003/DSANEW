@@ -1,0 +1,90 @@
+
+accounts =
+["John","johnsmith@mail.com","john_newyork@mail.com"] ---> 0
+
+["John","johnsmith@mail.com","john00@mail.com"] ---> 1
+
+["Mary","mary@mail.com"] ---> 2
+
+["John","johnnybravo@mail.com"] ---> 3
+
+
+
+0 -> johnsmith@mail.com , john_newyork@mail.com
+1 -> john00@mail.com
+2 -> mary@mail.com
+3 -> johnnybravo@mail.com
+
+
+#Approach - DSU
+class DSU{
+    vector<int> parent , size;
+    public : 
+    DSU(int n ){
+        size.resize(n,1);
+        parent.resize(n);
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+        }
+    }
+    int findUParent(int node){
+        if(parent[node]==node){
+            return node;
+        }
+        return parent[node] = findUParent(parent[node]);
+    }
+    void unionBySize(int u , int v){
+        int ulp_u = findUParent(u) , ulp_v = findUParent(v);
+        if(ulp_u==ulp_v){
+            return;
+        }
+        if(size[ulp_u]  < size[ulp_v] ){
+            parent[ulp_u] = ulp_v;
+            size[ulp_v]+= size[ulp_u];
+        }
+        else{
+            parent[ulp_v] = ulp_u;
+            size[ulp_u]+=size[ulp_v];
+        }
+    }
+};
+class Solution {
+public:
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
+      int n = accounts.size();
+      DSU dsu(n);
+      unordered_map<string , int> mapMailToParent;
+      for(int i=0;i<n;i++){
+          for(int j=1;j<accounts[i].size();j++){
+              string email = accounts[i][j];
+              if(mapMailToParent.find(email)==mapMailToParent.end()){
+                  mapMailToParent[email] = i;
+              } else{
+                  dsu.unionBySize(i,mapMailToParent[email]);
+              }
+          }
+      }
+      vector<string> emails[n];
+      for(auto p :  mapMailToParent){
+          string email = p.first;
+          int email_parent = p.second;
+          int ultimateParent = dsu.findUParent(email_parent);
+          emails[ultimateParent].push_back(email);
+      }
+      vector<vector<string>> ans;
+      for(int i=0;i<n;i++){
+          vector<string> emailList = emails[i];
+          if(emailList.size()!=0){
+              sort(emailList.begin(),emailList.end());
+              vector<string> temp;
+              temp.push_back(accounts[i][0]);
+              for(auto e : emailList){
+                  temp.push_back(e);
+              }
+              ans.push_back(temp);
+          }
+      }
+      return ans;
+
+    }
+};

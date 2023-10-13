@@ -1,0 +1,77 @@
+Source ------------ JENNY LECTURES AND LOVE BABBAR codencode
+
+#bridge = An edge on whose removal the no. of connected components in a graph increase
+or we can say that the graph will be divided in to two or more components
+
+
+#Approach - 1 : Brute Force
+// remove each edge and count the no of connected components using dfs if it increases the edge is a bridge
+TC : O(E*(V+E))
+
+
+
+#Approach - 2
+disc[] : store the time of insertion during dfs
+low[] : min of all adjacent apart from parent
+TC : O(V+E)
+
+
+
+class Solution {
+public:
+    void dfs(int node,int parent , vector<int> adj[],vector<int> &disc,vector<int> &low,vector<int> &vis, vector<vector<int>> &ans,int &timer){
+        vis[node] = 1;
+        disc[node] = low[node] = timer++;
+        for(int nbr : adj[node]){
+            //if the neighbour is parent itself then ignore.
+            if(nbr==parent){
+                continue;
+            }
+            //now there are only two cases left:
+            //1. case - either the nbr is not visited then i have to go there
+            //2. if visited and the node is not my parent node then it's a back edge then node must update the low[node] according to low[node] = min(low[node] , disc[nbr])
+
+            //1. case
+            else if(!vis[nbr]){
+                dfs(nbr,node,adj,disc,low,vis,ans,timer);    
+                //now check if bridge after neighbour has updated its low
+                  if( low[nbr] > disc[node])
+                    {
+                        vector<int> temp;
+                        temp.push_back(node);
+                        temp.push_back(nbr);
+                        ans.push_back(temp);
+                    }
+                 //now update the low time of node also as the low of its nbr might have updated
+                 low[node] = min(low[node],low[nbr]);
+                   
+            }
+            //2. case
+            else  {
+                //backedge - nbr is already visited earlier and not a parent so update the lowtime of node as it stores the lowest time or lowest node
+                and as the nbr is already visited its discovery time will be obiviously less so i should definetly take it
+                low[node] = min(low[node],disc[nbr]);
+            }
+        } 
+    }
+    vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+        vector<int> adj[n];
+        for(auto v : connections){
+              adj[v[0]].push_back(v[1]);
+              adj[v[1]].push_back(v[0]);
+        }
+        // Bridges in a graph.
+        // Make initial data structures.
+        vector<int> vis(n),disc(n,-1),low(n,-1);
+        vector<vector<int>> ans;
+     
+        int timer = 0;
+        int parent  = -1;
+        for(int v = 0; v < n; v++){
+            if(!vis[v]){
+                dfs(v,parent,adj,disc,low,vis,ans,timer);
+            }
+        }
+        return ans;
+    }
+};

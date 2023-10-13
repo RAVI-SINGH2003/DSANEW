@@ -1,0 +1,120 @@
+ - Dijakstra algo - single pair shortest path 
+ - not work on graphs with negative cycles 
+ - not work on graph with negative weights as we will keep on minimizing the distance and it will lead to tle.
+ - work on both directed and undirected graph.
+ -  It is a greddy algo.
+
+
+#Approach - 1 TC : O(V*V) as you are going through all vertices and then all of its neighbours
+which in worst case will be V-1 ~ V
+
+Reference - Abdul Bari video seen and self coded
+vector <int> dijkstra(int n, vector<vector<int>> adj[], int S)
+{
+    int vis[n] = {0};
+    vector<int> dis(n,1e8);
+    dis[S] = 0;
+    int count = n;
+    int minVertex = S;
+    while(count>0){
+        for(auto p :  adj[minVertex]){
+            int nbr = p[0];
+            int wt = p[1];
+            if(dis[minVertex] + wt < dis[nbr]){
+                dis[nbr] =  dis[minVertex] + wt;
+            }
+        }
+        vis[minVertex] = 1;
+        count--;
+        int minDis = 1e8;
+        for(int i=0;i<n;i++){
+            if(!vis[i] && minDis > dis[i]){
+                minDis = dis[i];
+                minVertex = i;
+            }
+        }
+    }
+    for(auto & e : dis){
+        if(e>=1e8) e = -1;
+    }
+    return dis;
+}
+
+#Approach - 2 Min Heaps TC : O(E.logV)  => proper derivation see striver video
+
+vector <int> dijkstra(int n, vector<vector<int>> adj[], int S)
+{
+    priority_queue<pair<int,int> , vector<pair<int,int>> ,greater<pair<int,int>>>minHeap;
+    vector<int> dis(n,1e9);
+    dis[S] = 0;
+    minHeap.push({0,S});
+    while(!minHeap.empty()){
+        int node =  minHeap.top().second;
+        int dist  =  minHeap.top().first;
+        minHeap.pop();
+        for(auto it : adj[node]){
+            int edgeWeight = it[1];
+            int adjNode = it[0];
+            if(dist + edgeWeight < dis[adjNode] ){
+                dis[adjNode] = dist + edgeWeight;
+                minHeap.push({dis[adjNode],adjNode});
+            }
+        }
+    }
+    return dis;
+}
+
+#Approach - 3 Using queue or bfs
+
+vector <int> dijkstra(int n, vector<vector<int>> adj[], int S)
+{
+    queue<int> q;
+    vector<int> dis(n,1e9);
+    dis[S] = 0;
+    q.push(S);
+    while(!q.empty()){
+        int node =  q.front();
+        int dist = dis[node];
+        q.pop();
+        for(auto it : adj[node]){
+            int edgeWeight = it[1];
+            int adjNode = it[0];
+            if(dist + edgeWeight < dis[adjNode] ){
+                dis[adjNode] = dist + edgeWeight;
+                q.push(adjNode);
+            }
+        }
+    }
+    return dis;
+}
+#Approach - 4 Using Sets - best approach
+
+vector <int> dijkstra(int n, vector<vector<int>> adj[], int S)
+{
+    set<pair<int,int>>sett;
+    vector<int> dis(n,1e9);
+    dis[S] = 0;
+    sett.insert({0,S});
+    while(!sett.empty()){
+        auto it = sett.begin();
+        int node  = (*it).second;
+        int dist  = (*it).first;
+        sett.erase(sett.begin());
+        for(auto it : adj[node]){
+            int edgeWeight = it[1];
+            int adjNode = it[0];
+            if(dist + edgeWeight < dis[adjNode] ){
+                
+                //if adjNode has already been touched so {dis[adjNode],adjNode} will be in set and i know
+                //i now have reached adjNode with less distance so no need of prev pair because if it will remain in set it will be taken in 
+                 //to account and we will again try relaxing all edges connected to adjNode which will of no use and will only increase TC.
+                
+                if(dis[adjNode]!=1e9)
+                sett.erase({dis[adjNode],adjNode});
+                dis[adjNode] = dist + edgeWeight;
+                sett.insert({dis[adjNode],adjNode});
+            }
+        }
+    }
+    return dis;
+}

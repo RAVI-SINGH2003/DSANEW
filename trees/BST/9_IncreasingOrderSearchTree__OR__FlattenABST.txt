@@ -1,0 +1,60 @@
+//tc : o(n)
+//sc :o(n)
+TreeNode* increasingBST(TreeNode* root) {
+    vector< TreeNode *> inorder;
+    TreeNode * curr = root;
+    while(curr!=NULL){
+        if(curr->left==NULL) {
+            inorder.push_back(curr);
+            curr = curr->right;
+        } 
+        else
+        {
+            TreeNode * temp = curr->left;
+            while(temp!=NULL && temp->right!=NULL && temp->right!=curr){
+                temp = temp->right;
+            }
+            if(temp!=NULL && temp->right==NULL){
+                //connecting the string
+                temp->right=curr;
+                curr = curr->left;
+            }
+            else {
+                inorder.push_back(curr);
+                temp->right = NULL;
+                curr = curr->right;
+            }
+        }
+    } 
+    int n = inorder.size();
+    for(int i=0;i<n-1;i++){
+        TreeNode * temp = inorder[i];
+        temp->left=NULL;
+        temp->right = inorder[i+1];
+    }
+    inorder[n-1]->left= NULL;
+    inorder[n-1]->right= NULL;
+    return inorder[0];
+}
+
+//tc : o(n)
+//sc :o(h)
+//Make tree to inorder linkedlist
+
+void inorder(TreeNode *root, TreeNode *&curr)
+{
+    if (root == NULL)
+        return;
+    inorder(root->left, curr);
+    curr->right = root;
+    curr = root;
+    curr->left = NULL;
+    inorder(root->right, curr);
+}
+TreeNode *increasingBST(TreeNode *root)
+{
+    TreeNode *curr = new TreeNode(0);
+    TreeNode *ans = curr;
+    inorder(root, curr);
+    return ans->right;
+}

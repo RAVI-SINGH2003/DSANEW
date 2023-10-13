@@ -1,0 +1,38 @@
+Node * solve(int l ,int r , int idx ,int in[],int po[],Node * root){
+    if(idx<0 || l>r) return NULL;
+    root = new Node(po[idx]);
+    int mid = -1;
+    for(int k=l;k<=r;k++)
+    {
+        if(in[k]==po[idx]){
+            mid = k;
+            break;
+        }
+    }
+    
+    root->left = solve(l,mid-1,idx-1-r+mid,in,po,root);
+    root->right = solve(mid+1,r,idx-1,in,po,root);
+    return root;
+}
+Node *buildTree(int in[], int post[], int n) {
+ return solve(0,n-1,n-1,in,post,NULL);
+}
+
+
+Node * solve(int l ,int r , int idx ,int in[],int po[],Node * root,auto & mpp){
+    if(idx<0 || l>r) return NULL;
+    root = new Node(po[idx]);
+    int mid = mpp[po[idx]].back();
+    mpp[po[idx]].pop_back();
+    root->left = solve(l,mid-1,idx-1-r+mid,in,po,root,mpp);
+    root->right = solve(mid+1,r,idx-1,in,po,root,mpp);
+    return root;
+}
+Node *buildTree(int in[], int post[], int n) {
+        map<int,vector<int>> mpp;
+        for(int i=n-1;i>=0;i--){
+          mpp[in[i]].push_back(i);
+        }
+        return solve(0,n-1,n-1,in,post,NULL,mpp);
+}
+

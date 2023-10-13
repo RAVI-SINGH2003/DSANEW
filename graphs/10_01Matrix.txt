@@ -1,0 +1,53 @@
+Approach :-
+just start from 1 cells with distnace as 0 and do multisource bfs to 0 cells
+distance of next 0 cell in up left right down = distance of current cell from a 1 cell + 1
+
+vector<vector<int>> nearest(vector<vector<int>>grid)
+{
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<vector<int>> ans(n,vector<int>(m,0));
+    vector<vector<int>> visited(n,vector<int>(m,0));
+    queue<pair<int,pair<int,int>>> q;
+    
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            if(grid[i][j]==1)
+            {
+  
+                visited[i][j] = 1;
+                q.push({0,{i,j}});
+            }
+        }
+        
+    }
+            
+        
+    pair<int,int> arr[] = {{-1,0},{1,0},{0,1},{0,-1}};
+    while(!q.empty())
+    {
+        int dist = q.front().first;
+        int row = q.front().second.first;
+        int col = q.front().second.second;
+        ans[row][col] = dist;
+        q.pop();
+        for(int k=0;k<4;k++)
+        {
+            int delrow = arr[k].first;
+            int delcol = arr[k].second;
+            int newRow = row + delrow;
+            int newCol = col + delcol;
+            if(newRow>=0 && newRow<n && newCol>=0 && newCol<m && grid[newRow][newCol]==0 && !visited[newRow][newCol])
+            {
+                visited[newRow][newCol] = 1;
+                q.push({dist+1 , {newRow,newCol}});
+            }
+        }
+        
+    }
+    return ans;
+}
+
+

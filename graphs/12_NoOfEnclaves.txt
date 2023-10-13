@@ -1,0 +1,111 @@
+#note - exactly same as prev ques
+#Approach -1 Using DFS as Prev Ques
+void dfs(auto & grid , auto & visited, int n,int m , int r , int  c){
+    
+    visited[r][c]  = true;
+    pair<int,int> arr[] = {{-1,0},{1,0},{0,-1},{0,1}};
+    for(int k=0;k<4;k++){
+        int delx = arr[k].first;
+        int dely = arr[k].second;
+        int newr = r + delx;
+        int newc = c + dely;
+        if(newr >=0 && newr <n && newc >=0 && newc <m && grid[newr][newc]==1 && !visited[newr][newc]){
+            dfs(grid,visited,n,m,newr,newc);
+        }
+    }
+    }
+int numberOfEnclaves(vector<vector<int>> &mat) {
+    //1.first find all the 1 at boundaries and move inside the grid from there and mark all 1 as visited(means from these 1 cells we can got to boundary)
+    //2.Now again traverse the grid to find the 1's and check if it's the 1 cell from where we can not got to boundary(not visited) , if it is count it
+    int n =  mat.size();
+    int m = mat[0].size();
+    vector<vector<int>> visited(n,vector<int>(m,0));
+    vector<vector<int>> grid = mat;
+    //1.first find all the 1 at boundaries and move inside the grid from there and mark all 1 as visited(means from these 1 cells we can got to boundary)
+    //1st row
+    for(int c=0;c<m;c++){
+        if(grid[0][c]==1&& !visited[0][c])
+        dfs(grid,visited,n,m,0,c);
+    }
+    //last column
+    for(int r=0;r<n;r++){
+        if(grid[r][m-1]==1 && !visited[r][m-1])
+        dfs(grid,visited,n,m,r,m-1);
+    }
+    //last row
+    for(int c=0;c<m;c++){
+        if(grid[n-1][c]==1 && !visited[n-1][c])
+        dfs(grid,visited,n,m,n-1,c);
+    }
+    //1st column
+    for(int r=0;r<n;r++){
+        if(grid[r][0]==1 && !visited[r][0])
+        dfs(grid,visited,n,m,r,0);
+    }
+    int count = 0;
+    //2.Now again traverse the grid to find the 1's and check if it's the 1 cell from where we can not got to boundary(not visited) , if it is count it
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(grid[i][j]==1 && !visited[i][j]){
+            count++;
+            }
+        }
+    }
+
+    return count;
+}
+
+#Approach - 2 Using BFS
+
+
+int numberOfEnclaves(vector<vector<int>> &mat) {
+    //1.first find all the 1 at boundaries and move inside the grid from there and mark all 1 as visited(means from these 1 ce;;s we can got to boundary)
+    //2.Now again traverse the grid to find the 1's and check if it's the 1 cell from where we can not got to boundary(not visited) , if it is count it
+    int n =  mat.size();
+    int m = mat[0].size();
+    vector<vector<int>> visited(n,vector<int>(m,0));
+    vector<vector<int>> grid = mat;
+    
+    //1.first find all the 1 at boundaries and move inside the grid from there and mark all 1 as visited(means from these 1 cells we can got to boundary)
+    queue<pair<int,int>> q;
+        //1st row
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(i==0 || i==n-1 ||j==0 || j==m-1){
+                if(grid[i][j]==1&& !visited[i][j])
+                {
+                    q.push({i,j});
+                    visited[i][j] = 1;
+                }
+            }
+        }
+    }
+    
+    pair<int,int> arr[] = {{-1,0},{1,0},{0,-1},{0,1}};
+    while(!q.empty()){
+        int r = q.front().first;
+        int c = q.front().second;
+        q.pop();
+        for(int k=0;k<4;k++){
+        int delx = arr[k].first;
+        int dely = arr[k].second;
+        int newr = r + delx;
+        int newc = c + dely;
+        if(newr >=0 && newr <n && newc >=0 && newc <m && grid[newr][newc]==1 && !visited[newr][newc]){
+            q.push({newr,newc});
+            visited[newr][newc] = 1;
+        }
+        }
+    }
+    int count = 0;
+//2.Now again traverse the grid to find the 1's and check if it's the 1 cell from where we can not got to boundary(not visited) , if it is count it
+for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+        if(grid[i][j]==1 && !visited[i][j]){
+        count++;
+        }
+    }
+}
+return count;
+    
+}

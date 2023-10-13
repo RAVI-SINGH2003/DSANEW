@@ -1,0 +1,45 @@
+#Note - Idea used is Kahn's algo (Topo Sort)
+
+vector<int> findOrder(int n, int m, vector<vector<int>> prerequisites) 
+{
+    vector<int> adj[n];
+    //converting given data in to graph
+    for(int i=0;i<prerequisites.size();i++){
+        int parent = prerequisites[i][1];
+        int child = prerequisites[i][0];
+        adj[parent].push_back(child);
+    }
+    //calculating indegree of each node
+    vector<int> indegree(n,0);
+    for(int node=0;node<n;node++){
+        for(int nbr : adj[node]) indegree[nbr]++;
+    }
+    queue<int> q;
+    //push nodes with 0 indegree in queue
+    for(int node=0;node<n;node++){
+        if(indegree[node]==0) 
+        {
+            q.push(node);
+        }
+    }
+    vector<int> ans;
+    //apply Kahns algo
+    while(!q.empty()){
+        int node = q.front();
+        ans.push_back(node);
+        q.pop();
+        for(int nbr : adj[node]){
+            indegree[nbr]--;
+            if(indegree[nbr]==0){
+                q.push(nbr);
+            }
+        }
+    }
+    //if the size of topo sort is not equal to no of vertices then it means there is a cycle in graph or deadlock
+    if(ans.size()!=n) return {};
+    return ans;
+}
+
+
+
+

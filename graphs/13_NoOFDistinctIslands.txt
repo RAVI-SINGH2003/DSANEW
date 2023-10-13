@@ -1,0 +1,31 @@
+void dfs(auto & grid , auto & visited , auto &shape , int n ,int m,int x, int y,int x0 , int y0){
+    visited[x][y] =1;
+    shape.push_back({(x-x0),(y-y0)});
+    pair<int,int> arr[] = {{-1,0},{1,0},{0,-1},{0,1}};
+    for(int k=0;k<4;k++){
+        int delx = arr[k].first;
+        int dely = arr[k].second;
+        int newx = x +  delx;
+        int newy= y + dely;
+        if(newx >=0 && newx <n && newy >=0 && newy <m && grid[newx][newy]== 1 && !visited[newx][newy]){
+            dfs(grid,visited,shape,n,m,newx,newy,x0,y0);
+        }
+    }
+    
+}
+int countDistinctIslands(vector<vector<int>>& mat) {
+    int n =  mat.size();
+    int m = mat[0].size();
+    set<vector<pair<int,int>>> sett;
+    vector<vector<int>> visited(n,vector<int>(m,0));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(mat[i][j]==1 && !visited[i][j]){
+                vector<pair<int,int>> shape;
+                    dfs(mat,visited,shape,n,m,i,j,i,j);
+                    sett.insert(shape);
+            }
+        }
+    }
+    return sett.size();
+}

@@ -1,0 +1,98 @@
+#Approach -  DSU
+
+
+class DSU{
+    public : 
+    vector<int> parent , size;
+    DSU(int n ){
+        size.resize(n,1);
+        parent.resize(n);
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+        }
+    }
+    int findUParent(int node){
+        if(parent[node]==node){
+            return node;
+        }
+        return parent[node] = findUParent(parent[node]);
+    }
+    void unionBySize(int u , int v){
+        int ulp_u = findUParent(u) , ulp_v = findUParent(v);
+        if(ulp_u==ulp_v){
+            return;
+        }
+        if(size[ulp_u]  < size[ulp_v] ){
+            parent[ulp_u] = ulp_v;
+            size[ulp_v]+= size[ulp_u];
+        }
+        else{
+            parent[ulp_v] = ulp_u;
+            size[ulp_u]+=size[ulp_v];
+        }
+    }
+};
+class Solution {
+public:
+   
+    TC : O(n*n)
+    SC : O(n*n) for DSU
+
+    int largestIsland(vector<vector<int>>& grid) {
+      int n = grid.size();
+      DSU dsu(n*n);
+      int dr [] = {-1,1,0,0};
+      int dc [] = {0,0,-1,1};
+
+      //step1 : connection groups of 1's using DSU
+      //O(n*n*4*4*alpha)
+      for(int row=0;row<n;row++){
+          for(int col=0;col<n;col++){
+              if(grid[row][col]==0) continue;
+              for(int ind = 0; ind <4; ind++){
+                  int newr = row + dr[ind];
+                  int newc = col + dc[ind];
+                  if(newr>=0 && newr <n && newc>=0 && newc < n && grid[newr][newc]==1){
+                      int u = row*n + col;
+                      int v = newr*n + newc;
+                      dsu.unionBySize(u,v);
+                  }
+              }
+          }
+      }
+      //step2 : try changing every 0 cell to 1 and figure out the no of ones on its 4 directions including the cell itself
+       int ans = 0,onesCount = 0;
+       //O(n*n*4*4*alpha)
+       for(int row=0;row<n;row++){
+           for(int col=0; col<n; col++){
+           
+               if(grid[row][col]==1) {
+                   onesCount++;
+                   continue;
+               }
+               unordered_set<int> uniqueUltimateParents;
+                for(int ind = 0; ind <4; ind++){
+                  int newr = row + dr[ind];
+                  int newc = col + dc[ind];
+                  if(newr>=0 && newr <n && newc>=0 && newc < n && grid[newr][newc]==1){
+                      int u = newr*n + newc;
+                      int ulp_u = dsu.findUParent(u);
+                      uniqueUltimateParents.insert(ulp_u);
+
+                  }
+              }
+              int sizeTotal= 0;
+              for(int ulp : uniqueUltimateParents){
+                  sizeTotal+= dsu.size[ulp];
+              }
+             //include +1 because the current cell is also changed to 1
+              ans = max(ans,sizeTotal+1);
+           }
+       }
+       //if all cells are one's then count of all 1's is n*n which is ans
+       if(onesCount==n*n)
+        return onesCount;
+        return ans;
+      
+    }
+};

@@ -1,0 +1,58 @@
+TC : O(klogk) + O((n*k-k)*logk) = O(n*klogk)
+SC : O(k)
+class node{
+    public : 
+    int data;
+    int row;
+    int col;
+    node(int data ,int row ,int col){
+        this->data = data;
+        this->row = row;
+        this->col = col;
+    }
+};
+class compare{
+  public :
+    bool operator()(node * n1 , node * n2){
+        return n1->data > n2->data;
+    }
+};
+class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        vector<int> ans(2);
+        //storing the first k elements
+        priority_queue<node *,vector<node *> ,compare> heap;
+        int maxi = INT_MIN;
+        for(int i=0;i<nums.size();i++){
+            node * newNode = new node(nums[i][0],i, 0);
+            maxi = max(maxi,nums[i][0]);
+            heap.push(newNode); 
+        }
+        int minRange = INT_MAX;
+        while(heap.size()==nums.size()){
+            node * minNode = heap.top();
+            int minNodeRow = minNode -> row;
+            int minNodeCol = minNode->col;
+            int maxElem = maxi;
+            int minElem = minNode->data;
+            int currRange = maxElem - minElem;
+            if(currRange < minRange){
+               minRange = currRange;
+               ans[0] = minElem;
+               ans[1] = maxElem;
+            }  
+            heap.pop();
+            if(minNodeCol+1 < nums[minNodeRow].size()){
+                  int nextVal = nums[minNodeRow][minNodeCol+1];
+                  node * next = new node(nextVal , minNodeRow , minNodeCol+1);
+                  heap.push(next);
+                  if(nextVal  > maxi){
+                      maxi = nextVal;
+                  }
+            }
+    
+        }
+        return ans;
+    }
+};

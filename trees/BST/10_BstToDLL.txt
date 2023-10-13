@@ -1,0 +1,18 @@
+//tc : o(n)
+//sc :o(h)
+void inorder(Node*root,Node * & curr){
+    if(root==NULL) return;
+    inorder(root->left,curr);
+    curr->right = root;
+    root->left = curr;
+    curr = root;
+    inorder(root->right,curr);
+}
+Node * bToDLL(Node *root)
+{
+    Node * curr = new Node(0), * temp = curr;
+    inorder(root, curr);
+    temp->right->left = NULL;
+    return temp->right;
+    
+}

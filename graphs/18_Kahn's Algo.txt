@@ -1,0 +1,50 @@
+//Topological Sort - Only valid for DAG
+Linear ordering of vertices such that if there is an edge between u and v , u appears before v in that ordering.
+5---->0<----4
+|           |
+*           *
+2---->3---->1
+5 4 2 3 1 0
+4 5 2 3 1 0
+
+Time Complexity: O(V + E).
+Auxiliary Space: O(V).
+
+#Approach - bfs
+//store indegree of all nodes
+//store in queue all nodes having indegree 0
+//now take out nodes from queue  and store the node in ans and reduce the indegree of adjacent nodes
+//when the indegree of a node become zero push it to queue
+
+void bfs(int node  , vector<int> & indegree , auto & ans,vector<int> * &adj){
+    queue<int> q;
+    //note that there will be atleast one element in queue as in a DAG its confirm that there is atleast one node with indegree 0
+    for(int i=0;i<indegree.size();i++){
+        if(indegree[i]==0)
+        q.push(i);
+    }
+    while(!q.empty()){
+        int v = q.front();
+        q.pop();
+        ans.push_back(v);
+        for(int nbr : adj[v]){
+            indegree[nbr]--;
+            if(indegree[nbr]==0)
+            q.push(nbr);
+            
+        }
+    }
+}
+vector<int> topoSort(int V, vector<int> adj[]) 
+{
+    vector<int> indegree(V);
+    vector<int> ans;
+    for(int node=0;node < V;node ++){
+        for(int nbr : adj[node]){
+            indegree[nbr]++;
+        }
+    }
+    bfs(0,indegree,ans,adj);
+    return ans;
+    
+}

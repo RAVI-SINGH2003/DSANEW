@@ -1,0 +1,47 @@
+//without optimization
+class Solution{
+    public:
+    Node * solve(int l ,int r , int idx ,int in[],int pre[],Node * root){
+        if(l>r) return NULL;
+        root = new Node(pre[idx]);
+        int mid = -1;
+        for(int k=l;k<=r;k++)
+        {
+            if(in[k]==pre[idx]){
+                mid = k;
+                break;
+            }
+        }
+        
+        root->left = solve(l,mid-1,idx+1,in,pre,root);
+        root->right = solve(mid+1,r,idx+1+mid-l,in,pre,root);
+        return root;
+    }
+    Node* buildTree(int in[],int pre[], int n)
+    {
+        int idx = 0;
+        return solve(0,n-1,0,in,pre,NULL);
+    }
+};
+ 
+//with optimization 
+Node * solve(int l ,int r , int idx ,int in[],int pre[],Node * root,map<int,vector<int>> &mpp){
+        if(l>r) return NULL;
+        root = new Node(pre[idx]);
+        int mid = mpp[pre[idx]].back();
+        mpp[pre[idx]].pop_back();
+        
+        root->left = solve(l,mid-1,idx+1,in,pre,root,mpp);
+        root->right = solve(mid+1,r,idx+1+mid-l,in,pre,root,mpp);
+        return root;
+    }
+    Node* buildTree(int in[],int pre[], int n)
+    {
+        int idx = 0;
+        map<int,vector<int>> mpp;
+        for(int i=n-1;i>=0;i--){
+         
+           mpp[in[i]].push_back(i);
+        }
+        return solve(0,n-1,0,in,pre,NULL,mpp);
+    }

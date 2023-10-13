@@ -1,0 +1,34 @@
+int kthSmallest(BinaryTreeNode<int>* root, int k) {
+    BinaryTreeNode<int> * curr = root;
+    int ans = -1;
+    while(curr!=NULL && k>0){
+        if(!curr->left){
+            ans = curr->data;
+            if(k==1){
+              return curr->data;
+            }
+            k--;
+            curr = curr->right;
+        }
+        else{
+            BinaryTreeNode<int> * temp = curr->left;
+            while(temp->right!=NULL &&temp->right!=curr){
+                temp = temp->right;
+            }
+            if(!temp->right){
+                temp->right = curr;
+                curr = curr->left;
+            }
+            else{
+                temp->right = NULL;
+                if(k==1){
+                 return curr->data;
+                }
+                k--;
+                curr = curr->right;
+                
+            }
+        }
+    }
+   return -1;
+}

@@ -1,0 +1,73 @@
+class DSU
+{
+    vector<int> parent, size;
+
+public:
+    DSU(int n)
+    {
+        size.resize(n , 1);
+        parent.resize(n);
+        for (int i = 0; i < n; i++)
+        {
+            parent[i] = i;
+        }
+    }
+    int findUParent(int node)
+    {
+        if (parent[node] == node)
+        {
+            return node;
+        }
+        // this is path compression
+        parent[node] = findUParent(parent[node]);
+        return parent[node];
+    }
+
+    void unionBySize(int u, int v)
+    {
+        // 1. find the parent of node
+        int ulp_u = findUParent(u);
+        int ulp_v = findUParent(v);
+
+        if (ulp_u == ulp_v)
+        {
+            return;
+        }
+        // 2. find the rank of nodes
+        // 3. connect node with smaller size with bigger size , if size same connect anyone to anyone
+        if (size[ulp_u] < size[ulp_v])
+        {
+            parent[ulp_u] = ulp_v;
+            size[ulp_v] += size[ulp_u];
+        }
+        else
+        {
+            parent[ulp_v] = ulp_u;
+            size[ulp_u] += size[ulp_v];
+        }
+    }
+    int countUltimateParents(){
+        int count = 0;
+        for(int i=0;i<parent.size();i++){
+            if(findUParent(i)==i)
+             count++;
+        }
+        return count;
+    }
+};
+
+class Solution {
+  public:
+    int numProvinces(vector<vector<int>> adj, int V) {
+        int n = adj.size();
+        DSU dsu(n);
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(adj[i][j]==0)
+                continue;
+                dsu.unionBySize(i,j);
+            }
+        }
+        return dsu.countUltimateParents();
+    }
+};
