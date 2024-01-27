@@ -1,17 +1,17 @@
- int height(TreeNode * node,bool  &check){
-        if(node==NULL){
-            return 0;
-        }
-        int left = height(node->left,check),right = height(node->right,check);
-        if(check && abs(left-right)>1)
-         check = false;
-        return 1 + max(left,right);
+int height(TreeNode * node,bool  &check){
+    if(node==NULL){
+        return 0;
     }
-    
-    bool isBalanced(TreeNode* root) {
-      if(root==NULL)
-      return true;
-      bool check = true;
-      height(root,check);
-      return check;
-    }
+    int left = height(node->left,check),right = height(node->right,check);
+    if(check && abs(left-right)>1)
+      check = false;
+    return 1 + max(left,right);
+}
+
+bool isBalanced(TreeNode* root) {
+  if(root==NULL)
+  return true;
+  bool check = true;
+  height(root,check);
+  return check;
+}

@@ -1,42 +1,42 @@
- 
+
 Modification of Vertical Traversal 
 ans = list of elements with last occurence for a index value
- vector<int> bottomView(Node *root)
-    {
-        vector<int> ans;
-        
-     if(root==NULL) return ans;
-       queue<pair<Node* , int >> q;
-       q.push({root, 0});
-       map<int ,int> mpp;
+vector<int> bottomView(Node *root)
+{
+   vector<int> ans;
+   
+   if(root==NULL) return ans;
+      queue<pair<Node* , int >> q;
+      q.push({root, 0});
+      map<int ,int> mpp;
 
 
-       while(!q.empty())
-       {
-         
-            pair<Node * ,int > temp = q.front();
-            int i = temp.second;
-             mpp[i] = temp.first->data;
-            
-             int index;
-             if(temp.first->left)
-             {
-                index = (temp.second-1);
-                q.push({temp.first->left,index});
+   while(!q.empty())
+   {
+   
+      pair<Node * ,int > temp = q.front();
+      int i = temp.second;
+         mpp[i] = temp.first->data;
+      
+         int index;
+         if(temp.first->left)
+         {
+            index = (temp.second-1);
+            q.push({temp.first->left,index});
 
-             }
-               if(temp.first->right)
-             {
-                index = (temp.second+1);
-                q.push({temp.first->right,index});
+         }
+         if(temp.first->right)
+         {
+            index = (temp.second+1);
+            q.push({temp.first->right,index});
 
-             }
-             q.pop();
+         }
+         q.pop();
 
-       }
-       for(pair<int,int> p : mpp){
-            ans.push_back(p.second);
-       }
-       return ans;
+   }
+   for(pair<int,int> p : mpp){
+      ans.push_back(p.second);
+   }
+   return ans;
 
-    }
+}

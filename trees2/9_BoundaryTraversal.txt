@@ -1,43 +1,43 @@
-   void leftNodes(Node * root,vector<int> &ans){
-        if(root==NULL || (root->left==NULL && root->right==NULL)) return;
-        ans.push_back(root->data);
-        if(root->left)
-        leftNodes(root->left,ans);
-        else
-        leftNodes(root->right,ans);
-        
-    }
-    void rightNodes(Node * root,vector<int> &ans){
-        if(root==NULL || (root->left==NULL && root->right==NULL)) return;
-        if(root->right)
-         rightNodes(root->right,ans);
-        else
-        rightNodes(root->left,ans);
-         ans.push_back(root->data);
-        
-    }
-    void leafNodes(Node * root,vector<int> &ans){
-        if(root==NULL) return;
-        if(root->left==NULL && root->right==NULL)
-        {
-             ans.push_back(root->data);
-             return;
-        }
-         leafNodes(root->left,ans);
-         leafNodes(root->right,ans);
-        
-    }
-    vector <int> boundary(Node *root)
-    {
-       // 1 step traverse all left nodes starting from root node except leaf node
-       // 2 step traverse all leaf nodes.
-       // 3 traverse all right nodes in reverse direction.
-       vector<int> ans;
-       if(root==NULL) return ans;
-       ans.push_back(root->data);
-       leftNodes(root->left,ans);
-       leafNodes(root->left,ans);
-       leafNodes(root->right,ans);
-       rightNodes(root->right,ans);
-       return ans;
-    }
+void leftNodes(Node * root,vector<int> &ans){
+     if(root==NULL || (root->left==NULL && root->right==NULL)) return;
+     ans.push_back(root->data);
+     if(root->left)
+     leftNodes(root->left,ans);
+     else
+     leftNodes(root->right,ans);
+     
+}
+void rightNodes(Node * root,vector<int> &ans){
+     if(root==NULL || (root->left==NULL && root->right==NULL)) return;
+     if(root->right)
+     rightNodes(root->right,ans);
+     else
+     rightNodes(root->left,ans);
+     ans.push_back(root->data);
+     
+}
+void leafNodes(Node * root,vector<int> &ans){
+     if(root==NULL) return;
+     if(root->left==NULL && root->right==NULL)
+     {
+          ans.push_back(root->data);
+          return;
+     }
+     leafNodes(root->left,ans);
+     leafNodes(root->right,ans);
+     
+}
+vector <int> boundary(Node *root)
+{
+     // 1 step traverse all left nodes starting from root node except leaf node
+     // 2 step traverse all leaf nodes.
+     // 3 traverse all right nodes in reverse direction.
+     vector<int> ans;
+     if(root==NULL) return ans;
+     ans.push_back(root->data);
+     leftNodes(root->left,ans);
+     leafNodes(root->left,ans);
+     leafNodes(root->right,ans);
+     rightNodes(root->right,ans);
+     return ans;
+}

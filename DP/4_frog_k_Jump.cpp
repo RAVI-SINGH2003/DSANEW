@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include<iostream>
 #include<vector>
 #include<climits>
@@ -87,12 +86,9 @@ int main()
     vector<int> dp(n,-1);
     cout<<solve_M(n-1,k,v,dp)<<endl;
     cout<<solve_T(n,k,v)<<endl;
-=======
-#include<iostream>
-#include<vector>
-#include<climits>
-using namespace std;
-//TC :O(K^N);
+}
+
+//TC :O(K*N);
 //SC :O(N)
 int solve_R(int n ,int k,vector<int>&v)
 {
@@ -176,5 +172,4 @@ int main()
     vector<int> dp(n,-1);
     cout<<solve_M(n-1,k,v,dp)<<endl;
     cout<<solve_T(n,k,v)<<endl;
->>>>>>> f8b8a2dcf8691bf61c6bc66fd4062749d41f17e1
 }
