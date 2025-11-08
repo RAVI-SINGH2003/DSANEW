@@ -42,7 +42,7 @@ int cutRod(vector<int> &price, int n)
     for (int cutSize = 2; cutSize <= n; cutSize++)
     {
         for (int len = 0; len <= n; len++)
-        {
+ 
             int pick = 0;
             if (len >= cutSize)
                 pick = price[cutSize - 1] + dp[cutSize][len - cutSize];
