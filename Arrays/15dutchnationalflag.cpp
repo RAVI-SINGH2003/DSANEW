@@ -10,7 +10,7 @@
 //         {
 //             switch(nums[mid])
 //             {
-//                 case 0 : swap(nums[mid++] ,nums[low++]); break;
+//                 case 0 : swap(nums[mid++] , break;
 //                 case 1 : mid++; break;
 //                 case 2 : swap(nums[mid] ,nums[high--]); break;
 //             }

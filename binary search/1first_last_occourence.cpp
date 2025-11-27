@@ -44,8 +44,7 @@ vector<int> find(int arr[], int n, int x)
 
 //METHOD - 2 : Using binary search stl functions
 // vector<int> find(int arr[], int n , int x )
-// {
-      
+// {      
 //    bool isPresent = binary_search(arr ,arr+n ,x);
 //    if(!isPresent)
 //    return {-1,-1};

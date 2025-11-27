@@ -66,7 +66,7 @@
 //             }
 //         }
 //     }
-//     vector<vector<int>> combinationSum2(vector<int> &candidates, int target)
+//     vector<vector<int>> combinationSum2(vec tor<int> &candidates, int target)
 //     {
 //         vector<vector<int>> ans;
 //         sort(candidates.begin(), candidates.end());

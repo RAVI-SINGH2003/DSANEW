@@ -36,7 +36,7 @@
 //             arr[i]=-arr[i];   
             
 //         }
-//       int max_circular= totalsum + kadene(arr,num); //here kadene will give sum of non contriuting elements for max circular subarray sum but sign is reversed
+//       int max_circular= totalsum + kad  //here kadene will give sum of non contriuting elements for max circular subarray sum but sign is reversed
 //         return max(max_normal,max_circular);
         
 //     }

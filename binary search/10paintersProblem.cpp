@@ -1,4 +1,4 @@
-//Idead  : same as book allocation
+//Idea  : same as book allocation
 // bool canPaint(vector<int>&boards ,int n ,int k ,int maximumtimetopaintallboards)
 // {
 //     int painterscount= 1,timetakentopaintboards= 0;
