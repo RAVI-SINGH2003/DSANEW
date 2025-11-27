@@ -40,29 +40,21 @@ int main()
 
 
 // 2nd way to implement
-
-class Solution {
+// Idea - either at each index start the new sum or take the previous sum + currelement
+// reference - codestorywitjmik
+class Solution
+{
 public:
-    long long maxSubarraySum(vector<int>& nums, int k) {
-        long long sum = LLONG_MIN;
+    int maxSubArray(vector<int> &nums)
+    {
+        int sum = 0;
+        int maxSum = nums[0];
         int n = nums.size();
-
-        vector<long long> pref(n);
-        pref[0] = nums[0];
-
-        for(int i = 1; i<n; i++){
-            pref[i] = pref[i-1] + nums[i];
+        for (int i = 0; i < n; i++)
+        {
+            sum = max(nums[i], sum + nums[i]);
+            maxSum = max(maxSum, sum);
         }
-
-
-        for(int i = 0; i<n; i++){
-            for(int j = i+k-1; j<n; j+=k){
-                long long s = pref[j] - (i>0 ? pref[i-1] : 0);
-                if(s>sum){
-                    sum = s;
-                }
-            }
-        }
-        return sum;
+        return maxSum;
     }
 };
