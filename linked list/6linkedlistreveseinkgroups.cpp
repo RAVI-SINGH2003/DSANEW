@@ -32,3 +32,6 @@
 //     head->next = reverseKGroup(next, k);
 //     return prev;
 // }
+
+1 2 3 
+p c n

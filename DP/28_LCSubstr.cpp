@@ -8,6 +8,7 @@ int lcs(string &str1, string &str2)
     string s = str1, t = str2;
     int ans = 0;
     vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+    
     for (int i = 1; i < n + 1; i++)
     {
         for (int j = 1; j < m + 1; j++)
